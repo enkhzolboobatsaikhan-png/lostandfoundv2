@@ -17,7 +17,7 @@ const A={"LOGO_NAVY": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAikAAACaCAY
 document.documentElement.style.setProperty('--bld','url(bg.jpg)');
 /* ---------- Өгөгдөл (localStorage) ---------- */
 const CATS=["Үнэмлэх / карт","Утас / цахилгаан хэрэгсэл","Түлхүүр","Түрийвч / цүнх","Хувцас","Ном / дэвтэр","Бусад"];
-const ICON={"Үнэмлэх / карт":"🪪","Утас / цахилгаан хэрэгсэл":"📱","Түлхүүр":"🔑","Түрийвч / цүнх":"👜","Хувцас":"🧥","Ном / дэвтэр":"📚","Бусад":"📦"};
+const ICON={"Үнэмлэх / карт","Утас / цахилгаан хэрэгсэл","Түлхүүр","Түрийвч / цүнх","Хувцас","Ном / дэвтэр","Бусад"};
 const ADMIN={u:"admin",p:"admin123"};
 const store={
   get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},
@@ -103,7 +103,7 @@ function loginPage(){
     <div class="lt">${T("student","Нэвтрэх")}${T("register","Бүртгүүлэх")}${T("admin","Админ")}</div>${form}</div>
    <div class="foot"><a onclick="go('home')">← Нүүр хуудас руу буцах</a></div></div>
    <div class="auth-r"><h2>Алдсан зүйлээ олж,<br>олсон зүйлээ эзэнд нь өгье</h2><p>Сургуулийн бүх байрны алдагдсан эд зүйлийг нэг дор бүртгэж, баталгаажуулан буцаана.</p>
-   <ul><li>📝 Зураг, тайлбартай зар оруулна</li><li>🔎 Ангилал, байршлаар хайна</li><li>✅ Админ шалгаж, эзэнд нь аюулгүй хүлээлгэн өгнө</li></ul></div></div>`;
+   <ul><li>Зураг, тайлбартай зар оруулна</li><li>Ангилал, байршлаар хайна</li><li>Админ шалгаж, эзэнд нь аюулгүй хүлээлгэн өгнө</li></ul></div></div>`;
 }
 /* ---------- Навигаци ---------- */
 function renderNav(){
@@ -117,19 +117,19 @@ function renderNav(){
 
 /* ---------- Нүүр ---------- */
 function card(p){
-  return `<div class="card" onclick="detail(${p.id})"><div class="ph">${p.img?`<img src="${p.img}" alt="">`:ICON[p.cat]||"📦"}${imgsOf(p).length>1?`<span class="cnt">📷 ${imgsOf(p).length}</span>`:""}</div>
+  return `<div class="card" onclick="detail(${p.id})"><div class="ph">${p.img?`<img src="${p.img}" alt="">`:ICON[p.cat]||}${imgsOf(p).length>1?`<span class="cnt"> ${imgsOf(p).length}</span>`:""}</div>
   <div class="cb"><span class="tag t-${p.type}">${p.type==="lost"?"Алдсан":"Олсон"}</span>
   ${p.status==="returned"?'<span class="tag s-returned">Эзэнд нь өгсөн</span>':""}
-  <h3>${esc(p.title)}</h3><div class="meta">📍 ${esc(p.place)}<br>🗓 ${esc(p.date)} · ${esc(p.cat)}</div></div></div>`;
+  <h3>${esc(p.title)}</h3><div class="meta"> ${esc(p.place)}<br>🗓 ${esc(p.date)} · ${esc(p.cat)}</div></div></div>`;
 }
 function home(){
   const cnt=t=>posts.filter(p=>p.status==="approved"&&(t==="all"||p.type===t)).length;
   return `<div class="hero"><h1>Алдсан зүйлээ олоорой, олсон зүйлээ эзэнд нь өгөөрэй</h1>
   <p>Сургуулийн байрууд дахь алдагдсан болон олдсон эд зүйлийг нэг дор бүртгэж, хайж, баталгаажуулан буцаана.</p><div class="cta"><button onclick="if(!needLogin())go('post')">+ Зар оруулах</button><button class="o" onclick="document.getElementById('fq').focus()">🔎 Хайх</button></div></div>
   <div class="filters">
-   <input id="fq" placeholder="🔎 Нэр, тайлбараар хайх" value="${esc(state.q)}" oninput="state.q=this.value;list()">
+   <input id="fq" placeholder="Нэр, тайлбараар хайх" value="${esc(state.q)}" oninput="state.q=this.value;list()">
    <select onchange="state.cat=this.value;list()"><option value="">Бүх ангилал</option>${CATS.map(c=>`<option ${state.cat===c?"selected":""}>${c}</option>`).join("")}</select>
-   <input placeholder="📍 Байршил" value="${esc(state.loc)}" oninput="state.loc=this.value;list()">
+   <input placeholder=" Байршил" value="${esc(state.loc)}" oninput="state.loc=this.value;list()">
    <button class="ghost" onclick="state.q=state.cat=state.loc='';render()">Цэвэрлэх</button></div>
   <div class="tabs">${[["all","Бүгд"],["lost","Алдсан"],["found","Олсон"]].map(([k,t])=>`<button class="${state.tab===k?"on":""}" onclick="state.tab='${k}';render()">${t} (${cnt(k)})</button>`).join("")}</div>
   <div class="grid" id="list"></div>`;
@@ -147,7 +147,7 @@ function detail(id){
   openModal(`${im.length?`<img class="big" id="bigimg" src="${im[0]}" alt="">${im.length>1?`<div class="thumbs">${im.map((s,i)=>`<img class="${i?"":"on"}" src="${s}" alt="" onclick="bigimg.src=this.src;document.querySelectorAll('.thumbs img').forEach(x=>x.classList.remove('on'));this.classList.add('on')">`).join("")}</div>`:""}`:`<div class="ph" style="border-radius:10px;margin-bottom:8px">${ICON[p.cat]||"📦"}</div>`}
   <span class="tag t-${p.type}">${p.type==="lost"?"Алдсан":"Олсон"}</span>
   <h2 style="margin:8px 0">${esc(p.title)}</h2>
-  <p class="meta">📍 ${esc(p.place)} · 🗓 ${esc(p.date)} · ${esc(p.cat)}</p>
+  <p class="meta"> ${esc(p.place)} · ${esc(p.date)} · ${esc(p.cat)}</p>
   <p>${esc(p.desc)||"—"}</p>
   <p class="meta">Холбоо барих мэдээллийг аюулгүй байдлын үүднээс админ баталгаажуулсны дараа өгнө.</p>
   ${canClaim?`<label>${p.type==="found"?"Энэ миний зүйл — эзэмшлийн баталгаа (онцлог тэмдэг, дотор нь юу байсан гэх мэт)":"Би энэ зүйлийг олсон — дэлгэрэнгүй тайлбар"}</label>
@@ -208,7 +208,7 @@ function mine(){
   const r=posts.filter(p=>p.owner===(user.uid||user.id)).sort((a,b)=>b.id-a.id);
   return `<h2>Миний зарууд</h2>`+(r.length?r.map(p=>`<div class="item"><div class="ph">${p.img?`<img src="${p.img}" alt="">`:ICON[p.cat]}</div>
   <div class="info"><span class="tag t-${p.type}">${p.type==="lost"?"Алдсан":"Олсон"}</span> <span class="tag s-${p.status}">${STATUS[p.status]}</span>
-  <h3 style="margin:6px 0">${esc(p.title)}</h3><div class="meta">📍 ${esc(p.place)} · ${esc(p.date)}</div></div></div>`).join(""):'<div class="empty">Та зар оруулаагүй байна</div>');
+  <h3 style="margin:6px 0">${esc(p.title)}</h3><div class="meta"> ${esc(p.place)} · ${esc(p.date)}</div></div></div>`).join(""):'<div class="empty">Та зар оруулаагүй байна</div>');
 }
 
 /* ---------- Админ ---------- */
@@ -222,16 +222,16 @@ function admin(){
     body=claims.length?[...claims].reverse().map(c=>{const p=posts.find(x=>x.id===c.postId);return `<div class="item"><div class="info">
       <b>${p?esc(p.title):"(устсан зар)"}</b> <span class="tag ${c.done?"s-returned":"s-pending"}">${c.done?"Шийдвэрлэсэн":"Шинэ"}</span>
       <p style="margin:6px 0">${esc(c.msg)}</p><div class="meta">Хэрэглэгч: ${esc(c.byCode||c.by)} · Утас: ${esc(c.phone)} · ${esc(c.date)}</div>
-      ${p&&p.secret?`<div class="secret">🔐 Зар оруулагчийн нууц онцлог: ${esc(p.secret)}</div>`:""}
-      ${p?`<div class="secret">📞 Зар оруулагчийн утас: ${esc(p.contact)}</div>`:""}</div>
+      ${p&&p.secret?`<div class="secret"> Зар оруулагчийн нууц онцлог: ${esc(p.secret)}</div>`:""}
+      ${p?`<div class="secret">Зар оруулагчийн утас: ${esc(p.contact)}</div>`:""}</div>
       <div class="acts">${c.done?"":`<button class="sm ok" onclick="claimDone(${c.id})">Шийдвэрлэсэн</button>`}
       ${p&&p.status==="approved"?`<button class="sm" onclick="setStatus(${p.id},'returned')">Эзэнд нь өгсөн</button>`:""}</div></div>`}).join(""):'<div class="empty">Хүсэлт алга</div>';
   }else{
     const r=posts.filter(p=>p.status===state.admTab).sort((a,b)=>b.id-a.id);
     body=r.length?r.map(p=>`<div class="item"><div class="ph">${p.img?`<img src="${p.img}" alt="">`:ICON[p.cat]}</div><div class="info">
       <span class="tag t-${p.type}">${p.type==="lost"?"Алдсан":"Олсон"}</span>
-      <h3 style="margin:6px 0">${esc(p.title)}</h3><div class="meta">📍 ${esc(p.place)} · ${esc(p.date)} · ${esc(p.cat)}<br>Оруулсан: ${esc(p.ownerCode||p.owner)} · Утас: ${esc(p.contact)}</div>
-      <p style="margin:6px 0">${esc(p.desc)}</p>${imgsOf(p).length>1?`<div class="thumbs">${imgsOf(p).map(s=>`<img src="${s}" alt="" onclick="window.open(this.src)">`).join("")}</div>`:""}${p.secret?`<div class="secret">🔐 ${esc(p.secret)}</div>`:""}</div>
+      <h3 style="margin:6px 0">${esc(p.title)}</h3><div class="meta">${esc(p.place)} · ${esc(p.date)} · ${esc(p.cat)}<br>Оруулсан: ${esc(p.ownerCode||p.owner)} · Утас: ${esc(p.contact)}</div>
+      <p style="margin:6px 0">${esc(p.desc)}</p>${imgsOf(p).length>1?`<div class="thumbs">${imgsOf(p).map(s=>`<img src="${s}" alt="" onclick="window.open(this.src)">`).join("")}</div>`:""}${p.secret?`<div class="secret">${esc(p.secret)}</div>`:""}</div>
       <div class="acts">${p.status==="pending"?`<button class="sm ok" onclick="setStatus(${p.id},'approved')">Батлах</button><button class="sm bad" onclick="setStatus(${p.id},'rejected')">Татгалзах</button>`:""}
       ${p.status==="approved"?`<button class="sm" onclick="setStatus(${p.id},'returned')">Эзэнд нь өгсөн</button><button class="sm ghost" onclick="setStatus(${p.id},'rejected')">Нуух</button>`:""}
       ${p.status==="rejected"?`<button class="sm ok" onclick="setStatus(${p.id},'approved')">Батлах</button>`:""}
@@ -249,7 +249,7 @@ function claimDone(id){if(FB)return fbClaimDone(id);const c=claims.find(x=>x.id=
 
 /* ---------- Гишүүд (админ) ---------- */
 function members(){
-  return `<input placeholder="🔎 Код, нэр, и-мэйлээр хайх" value="${esc(state.mq||"")}" oninput="state.mq=this.value;document.getElementById('mlist').innerHTML=mlist()" style="margin-bottom:12px"><div id="mlist">${mlist()}</div>`;
+  return `<input placeholder="Код, нэр, и-мэйлээр хайх" value="${esc(state.mq||"")}" oninput="state.mq=this.value;document.getElementById('mlist').innerHTML=mlist()" style="margin-bottom:12px"><div id="mlist">${mlist()}</div>`;
 }
 function mlist(){
   const q=(state.mq||"").toLowerCase();
@@ -258,7 +258,7 @@ function mlist(){
   return r.map(u=>{const pc=posts.filter(p=>p.owner===(u.uid||u.id)).length,bl=u.status==="blocked",k=esc(u.id);
     return `<div class="item"><div class="ph" style="font-size:34px"></div><div class="info">
     <b>${esc(u.name)}</b> <span class="tag ${bl?"s-rejected":"s-returned"}">${bl?"Хаагдсан":"Идэвхтэй"}</span>
-    <div class="meta">Код: ${k} · ✉️ ${esc(u.email)} · 📞 ${esc(u.phone)}<br>Бүртгүүлсэн: ${esc(u.created)} · Сүүлд нэвтэрсэн: ${esc(u.last||"—")} · Зар: ${pc}</div></div>
+    <div class="meta">Код: ${k} · ${esc(u.email)} · ${esc(u.phone)}<br>Бүртгүүлсэн: ${esc(u.created)} · Сүүлд нэвтэрсэн: ${esc(u.last||"—")} · Зар: ${pc}</div></div>
     <div class="acts"><button class="sm ${bl?"ok":"ghost"}" onclick="toggleBlock('${k}')">${bl?"Нээх":"Хаах"}</button>
     ${FB?"":`<button class="sm ghost" onclick="resetPw('${k}')">Нууц үг шинэчлэх</button><button class="sm bad" onclick="delUser('${k}')">Устгах</button>`}</div></div>`}).join("");
 }
